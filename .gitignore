@@ -7,4 +7,5 @@ EscapeGame/Content/StarterContent/
 
 #  VS  #
 *.VC.db
+*.suo
 
