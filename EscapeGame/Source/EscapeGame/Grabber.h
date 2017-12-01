@@ -26,11 +26,16 @@ private:
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 
 	UInputComponent* InputComponent = nullptr;
+
+
 	//grab what's in reach
 	void Grab();
 	void Release();
 	void FindPhysicsHandleComponent();
 	void SetupInputComponent();
 
+
 	const FHitResult GetFirstPhysicsBodyInReach();
+	FVector GetLineTraceStart();
+	FVector GetLineTraceEnd();
 };

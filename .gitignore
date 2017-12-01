@@ -9,4 +9,6 @@ EscapeGame/Content/StarterContent/Textures
 #  VS  #
 *.VC.db
 *.suo
+*.VC.opendb
+*.sln
 
