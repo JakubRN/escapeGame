@@ -22,7 +22,7 @@ public:
 	virtual void TickComponent( float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction ) override;
 
 private:
-	float Reach = 100.f;
+	float Reach = 130.f;
 	UPhysicsHandleComponent* PhysicsHandle = nullptr;
 
 	UInputComponent* InputComponent = nullptr;
@@ -34,8 +34,19 @@ private:
 	void FindPhysicsHandleComponent();
 	void SetupInputComponent();
 
-
 	const FHitResult GetFirstPhysicsBodyInReach();
 	FVector GetLineTraceStart();
 	FVector GetLineTraceEnd();
+
+
+	FVector TranslationVector;
+	float HitDistance = 0.f;
+	FVector TargetInitialPosition;
+	FRotator TargetInitialRotation;
+	
+	FVector PlayerInitialPosition;
+	FRotator PlayerInitialRotation;
+	
+	FVector PlayerPosition;
+	FRotator PlayerRotation;
 };

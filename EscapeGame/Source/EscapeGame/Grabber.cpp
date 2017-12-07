@@ -9,7 +9,7 @@ UGrabber::UGrabber()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	bWantsBeginPlay = true;
+	//bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
@@ -55,6 +55,10 @@ void UGrabber::Grab() {
 			ComponentToGrab->GetOwner()->GetActorLocation(),
 			true//allow rotation
 		);
+		GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerInitialPosition, OUT PlayerInitialRotation);
+		PhysicsHandle->GetTargetLocationAndRotation(OUT TargetInitialPosition, OUT TargetInitialRotation);
+		TranslationVector = TargetInitialPosition - HitResult.Location;
+		HitDistance = HitResult.Distance;
 	}
 
 }
@@ -69,7 +73,7 @@ void UGrabber::TickComponent( float DeltaTime, ELevelTick TickType, FActorCompon
 	Super::TickComponent( DeltaTime, TickType, ThisTickFunction );
 	if (!PhysicsHandle) return;
 	if (PhysicsHandle->GrabbedComponent) {
-		PhysicsHandle->SetTargetLocation(GetLineTraceEnd());
+		PhysicsHandle->SetTargetLocationAndRotation(GetLineTraceStart() + PlayerRotation.Vector() * HitDistance + (PlayerRotation - PlayerInitialRotation).RotateVector(TranslationVector), TargetInitialRotation + (PlayerRotation - PlayerInitialRotation));
 	}
 }
 
@@ -91,17 +95,12 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 
 FVector UGrabber::GetLineTraceStart()
 {
-	FVector PlayerPosition;
-	FRotator PlayerRotation;
 	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerPosition, OUT PlayerRotation);
 	return PlayerPosition;
 }
 FVector UGrabber::GetLineTraceEnd()
 {
-	FVector PlayerPosition;
-	FRotator PlayerRotation;
 	FVector LineTraceEnd;
-	GetWorld()->GetFirstPlayerController()->GetPlayerViewPoint(OUT PlayerPosition, OUT PlayerRotation);
-	LineTraceEnd = PlayerPosition + PlayerRotation.Vector() * Reach;
+	LineTraceEnd = GetLineTraceStart() + PlayerRotation.Vector() * Reach;
 	return LineTraceEnd;
 }
